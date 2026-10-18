@@ -8,7 +8,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda - Sheila Nail Designer | Capivari</title>
+    <title>Agenda Sheila Nail Designer</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome para Ícones -->
@@ -16,180 +16,162 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="bg-light">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1"><i class="fa-solid fa-hand-sparkles text-pink me-2"></i> Sheila Nail Designer</span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fa-solid fa-wand-magic-sparkles text-warning"></i> Sheila Nail Designer</a>
             <span class="text-white small"><i class="fa-solid fa-location-dot me-1"></i> Capivari - SP</span>
         </div>
     </nav>
 
-    <div class="container my-4">
-        <!-- Cards de Resumo -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 bg-white">
-                    <div class="card-body">
-                        <h6 class="text-muted mb-2">Agendamentos Hoje</h6>
-                        <h3 id="totalAgendamentos" class="fw-bold text-primary">0</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 bg-white">
-                    <div class="card-body">
-                        <h6 class="text-muted mb-2">Faturamento Previsto</h6>
-                        <h3 id="totalFaturamento" class="fw-bold text-success">R$ 0,00</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 bg-white">
-                    <div class="card-body">
-                        <h6 class="text-muted mb-2">Clientes Cadastrados</h6>
-                        <h3 id="totalClientes" class="fw-bold text-info">0</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="container">
         <!-- Abas de Navegação -->
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-agenda-tab" data-bs-toggle="pill" data-bs-target="#pills-agenda" type="button" role="tab"><i class="fa-solid fa-calendar-days me-2"></i> Agenda</button>
+                <button class="nav-link active" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda" type="button" role="tab"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-clientes-tab" data-bs-toggle="pill" data-bs-target="#pills-clientes" type="button" role="tab"><i class="fa-solid fa-users me-2"></i> Clientes</button>
+                <button class="nav-link" id="servicos-tab" data-bs-toggle="tab" data-bs-target="#servicos" type="button" role="tab"><i class="fa-solid fa-list-check"></i> Gerenciar Serviços</button>
             </li>
         </ul>
 
-        <div class="tab-content" id="pills-tabContent">
-            <!-- ABA AGENDA -->
-            <div class="tab-pane fade show active" id="pills-agenda" role="tabpanel">
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 text-dark"><i class="fa-solid fa-plus-circle me-2 text-primary"></i> Novo Agendamento</h5>
+        <div class="tab-content" id="myTabContent">
+            <!-- ABA 1: AGENDA -->
+            <div class="tab-pane fade show active" id="agenda" role="tabpanel">
+                <div class="row">
+                    <!-- Formulário de Agendamento -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fa-solid fa-plus-circle"></i> Novo Agendamento</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="formAgendamento">
+                                    <div class="mb-3">
+                                        <label for="cliente" class="form-label">Nome da Cliente</label>
+                                        <input type="text" class="form-control" id="cliente" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="telefone" class="form-label">Telefone / WhatsApp</label>
+                                        <input type="text" class="form-control" id="telefone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="selectServico" class="form-label">Serviço (Predefinido)</label>
+                                        <select class="form-select" id="selectServico" required onchange="atualizarDadosServico()">
+                                            <option value="">Selecione um serviço...</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="data" class="form-label">Data</label>
+                                            <input type="date" class="form-control" id="data" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="hora" class="form-label">Hora</label>
+                                            <input type="time" class="form-control" id="hora" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="valor" class="form-label">Valor (R$)</label>
+                                        <input type="number" step="0.01" class="form-control" id="valor" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pagamento" class="form-label">Forma de Pagamento</label>
+                                        <select class="form-select" id="pagamento" required>
+                                            <option value="PIX">PIX</option>
+                                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                            <option value="Cartão de Débito">Cartão de Débito</option>
+                                            <option value="Dinheiro">Dinheiro</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100"><i class="fa-solid fa-save"></i> Salvar Agendamento</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form id="formAgendamento">
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <label class="form-label">Cliente</label>
-                                    <select class="form-select" id="agCliente" required>
-                                        <option value="">Selecione a cliente...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Serviço</label>
-                                    <input type="text" class="form-control" id="agServico" placeholder="Ex: Fibra de Vidro" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Data</label>
-                                    <input type="date" class="form-control" id="agData" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Hora</label>
-                                    <input type="time" class="form-control" id="agHora" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Valor (R$)</label>
-                                    <input type="number" step="0.01" class="form-control" id="agValor" placeholder="0,00" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Pagamento</label>
-                                    <select class="form-select" id="agPagamento" required>
-                                        <option value="PIX">PIX</option>
-                                        <option value="Cartão de Crédito">Cartão de Crédito</option>
-                                        <option value="Cartão de Débito">Cartão de Débito</option>
-                                        <option value="Dinheiro">Dinheiro</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-9 d-flex align-items-end justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-check me-1"></i> Salvar Agendamento</button>
+
+                    <!-- Lista de Agendamentos -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fa-solid fa-calendar-check"></i> Atendimentos Agendados</h5>
+                                <span id="totalAgendamentos" class="badge bg-secondary">0 agendamentos</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Data/Hora</th>
+                                                <th>Cliente</th>
+                                                <th>Serviço</th>
+                                                <th>Valor</th>
+                                                <th>Pagamento</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabelaAgendamentos">
+                                            <!-- Preenchido via JavaScript -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Lista de Agendamentos -->
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 text-dark"><i class="fa-solid fa-list me-2 text-primary"></i> Lista de Horários</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0 align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Hora</th>
-                                        <th>Cliente</th>
-                                        <th>Serviço</th>
-                                        <th>Valor</th>
-                                        <th>Pagamento</th>
-                                        <th>Status</th>
-                                        <th class="text-end">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelaAgendamentos">
-                                    <!-- Preenchido via JS -->
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ABA CLIENTES -->
-            <div class="tab-pane fade" id="pills-clientes" role="tabpanel">
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 text-dark"><i class="fa-solid fa-user-plus me-2 text-info"></i> Cadastrar Nova Cliente</h5>
+            <!-- ABA 2: GERENCIAR SERVIÇOS -->
+            <div class="tab-pane fade" id="servicos" role="tabpanel">
+                <div class="row">
+                    <!-- Cadastro de Serviço -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0"><i class="fa-solid fa-scissors"></i> Cadastrar Novo Serviço</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="formServico">
+                                    <div class="mb-3">
+                                        <label for="nomeServico" class="form-label">Nome do Serviço</label>
+                                        <input type="text" class="form-control" id="nomeServico" placeholder="Ex: Esmaltação em Gel" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="precoServico" class="form-label">Preço Padrão (R$)</label>
+                                        <input type="number" step="0.01" class="form-control" id="precoServico" placeholder="0.00" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tempoServico" class="form-label">Duração Estimada</label>
+                                        <input type="text" class="form-control" id="tempoServico" placeholder="Ex: 45 min" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-plus"></i> Adicionar Serviço</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form id="formCliente">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">Nome Completo</label>
-                                    <input type="text" class="form-control" id="cliNome" placeholder="Nome da cliente" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Telefone / WhatsApp</label>
-                                    <input type="text" class="form-control" id="cliTelefone" placeholder="(19) 99999-9999" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Observações (Alergias / Preferências)</label>
-                                    <input type="text" class="form-control" id="cliObs" placeholder="Ex: Alérgica a esmalte comum">
-                                </div>
-                                <div class="col-md-2 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-info text-white w-100"><i class="fa-solid fa-user-check me-1"></i> Cadastrar</button>
+
+                    <!-- Lista de Serviços Cadastrados -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0"><i class="fa-solid fa-list"></i> Serviços Pré-definidos</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Serviço</th>
+                                                <th>Preço Padrão</th>
+                                                <th>Duração</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabelaServicos">
+                                            <!-- Preenchido via JavaScript -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Lista de Clientes -->
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 text-dark"><i class="fa-solid fa-address-book me-2 text-info"></i> Clientes Cadastradas</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0 align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Telefone</th>
-                                        <th>Observações</th>
-                                        <th class="text-end">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelaClientes">
-                                    <!-- Preenchido via JS -->
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -199,138 +181,134 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Script da Aplicação -->
+    
+    <!-- Script de Controle -->
     <script>
-        let clientes = JSON.parse(localStorage.getItem('nail_clientes')) || [];
-        let agendamentos = JSON.parse(localStorage.getItem('nail_agendamentos')) || [];
+        let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+        let servicos = JSON.parse(localStorage.getItem('servicos')) || [
+            { nome: 'Manicure Simples', preco: 35.00, tempo: '30 min' },
+            { nome: 'Esmaltação em Gel', preco: 60.00, tempo: '1 hora' },
+            { nome: 'Alongamento em Fibra', preco: 150.00, tempo: '2 horas' }
+        ];
 
-        function salvarDados() {
-            localStorage.setItem('nail_clientes', JSON.stringify(clientes));
-            localStorage.setItem('nail_agendamentos', JSON.stringify(agendamentos));
-            atualizarTabelas();
+        if (!localStorage.getItem('servicos')) {
+            localStorage.setItem('servicos', JSON.stringify(servicos));
         }
 
-        function atualizarSelectClientes() {
-            const select = document.getElementById('agCliente');
-            select.innerHTML = '<option value="">Selecione a cliente...</option>';
-            clientes.forEach(c => {
-                select.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
+        function renderizarServicos() {
+            const tbody = document.getElementById('tabelaServicos');
+            tbody.innerHTML = '';
+            
+            servicos.forEach((s, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${s.nome}</strong></td>
+                        <td>R$ ${parseFloat(s.preco).toFixed(2)}</td>
+                        <td><span class="badge bg-info text-dark">${s.tempo}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="excluirServico(${index})">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            atualizarSelectServicos();
+        }
+
+        function atualizarSelectServicos() {
+            const select = document.getElementById('selectServico');
+            select.innerHTML = '<option value="">Selecione um serviço...</option>';
+            servicos.forEach((s) => {
+                select.innerHTML += `<option value="${s.nome}" data-preco="${s.preco}">${s.nome} - R$ ${parseFloat(s.preco).toFixed(2)} (${s.tempo})</option>`;
             });
         }
 
-        function atualizarTabelas() {
-            const tbodyCli = document.getElementById('tabelaClientes');
-            tbodyCli.innerHTML = '';
-            
-            if (clientes.length === 0) {
-                tbodyCli.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">Nenhuma cliente cadastrada ainda.</td></tr>`;
-            } else {
-                clientes.forEach((c, index) => {
-                    tbodyCli.innerHTML += `
-                        <tr>
-                            <td class="fw-semibold">${c.nome}</td>
-                            <td>${c.telefone}</td>
-                            <td><span class="badge bg-warning text-dark">${c.obs || 'Nenhuma'}</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-danger" onclick="removerCliente(${index})"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
+        function atualizarDadosServico() {
+            const select = document.getElementById('selectServico');
+            const selectedOption = select.options[select.selectedIndex];
+            const preco = selectedOption.getAttribute('data-preco');
+            if (preco) {
+                document.getElementById('valor').value = preco;
             }
-
-            const tbodyAg = document.getElementById('tabelaAgendamentos');
-            tbodyAg.innerHTML = '';
-            let faturamentoTotal = 0;
-
-            if (agendamentos.length === 0) {
-                tbodyAg.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-3">Nenhum agendamento registrado ainda.</td></tr>`;
-            } else {
-                agendamentos.forEach((a, index) => {
-                    if(a.status === 'Concluído') {
-                        faturamentoTotal += parseFloat(a.valor);
-                    }
-                    
-                    let dataPartes = a.data ? a.data.split('-') : ['', '', ''];
-                    let dataFormatada = dataPartes.length === 3 ? `${dataPartes[2]}/${dataPartes[1]}/${dataPartes[0]}` : a.data;
-                    
-                    let badgeStatus = a.status === 'Concluído' ? 'bg-success' : 'bg-primary';
-
-                    tbodyAg.innerHTML += `
-                        <tr>
-                            <td>${dataFormatada}</td>
-                            <td class="fw-bold text-primary">${a.hora}</td>
-                            <td class="fw-semibold">${a.cliente}</td>
-                            <td>${a.servico}</td>
-                            <td>R$ ${parseFloat(a.valor).toFixed(2)}</td>
-                            <td><span class="badge bg-secondary">${a.pagamento || 'PIX'}</span></td>
-                            <td><span class="badge ${badgeStatus}">${a.status}</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-success me-1" onclick="alternarStatus(${index})" title="Alternar Status"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="removerAgendamento(${index})" title="Excluir"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
-            document.getElementById('totalAgendamentos').innerText = agendamentos.length;
-            document.getElementById('totalFaturamento').innerText = `R$ ${faturamentoTotal.toFixed(2)}`;
-            document.getElementById('totalClientes').innerText = clientes.length;
-
-            atualizarSelectClientes();
         }
 
-        document.getElementById('formCliente').addEventListener('submit', function(e) {
+        document.getElementById('formServico').addEventListener('submit', function(e) {
             e.preventDefault();
-            const novaCliente = {
-                id: Date.now(),
-                nome: document.getElementById('cliNome').value,
-                telefone: document.getElementById('cliTelefone').value,
-                obs: document.getElementById('cliObs').value
+            const novoServico = {
+                nome: document.getElementById('nomeServico').value,
+                preco: parseFloat(document.getElementById('precoServico').value),
+                tempo: document.getElementById('tempoServico').value
             };
-            clientes.push(novaCliente);
-            salvarDados();
-            this.reset();
+            servicos.push(novoServico);
+            localStorage.setItem('servicos', JSON.stringify(servicos));
+            document.getElementById('formServico').reset();
+            renderizarServicos();
         });
+
+        function excluirServico(index) {
+            if (confirm('Deseja realmente excluir este serviço?')) {
+                servicos.splice(index, 1);
+                localStorage.setItem('servicos', JSON.stringify(servicos));
+                renderizarServicos();
+            }
+        }
+
+        function renderizarAgendamentos() {
+            const tbody = document.getElementById('tabelaAgendamentos');
+            tbody.innerHTML = '';
+            
+            agendamentos.sort((a, b) => new Date(a.data + 'T' + a.hora) - new Date(b.data + 'T' + b.hora));
+
+            agendamentos.forEach((ag, index) => {
+                const partesData = ag.data ? ag.data.split('-') : ['', '', ''];
+                const dataFormatada = partesData.length === 3 ? `${partesData[2]}/${partesData[1]}/${partesData[0]}` : ag.data;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${dataFormatada || ''}</strong><br><small class="text-muted">${ag.hora || ''}</small></td>
+                        <td><strong>${ag.cliente || ''}</strong><br><small class="text-muted"><i class="fa-solid fa-phone"></i> ${ag.telefone || 'N/A'}</small></td>
+                        <td>${ag.servico || ''}</td>
+                        <td>R$ ${parseFloat(ag.valor || 0).toFixed(2)}</td>
+                        <td><span class="badge bg-success">${ag.pagamento || ''}</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="excluirAgendamento(${index})">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('totalAgendamentos').innerText = `${agendamentos.length} agendamento(s)`;
+        }
 
         document.getElementById('formAgendamento').addEventListener('submit', function(e) {
             e.preventDefault();
             const novoAg = {
-                id: Date.now(),
-                cliente: document.getElementById('agCliente').value,
-                servico: document.getElementById('agServico').value,
-                data: document.getElementById('agData').value,
-                hora: document.getElementById('agHora').value,
-                valor: parseFloat(document.getElementById('agValor').value),
-                pagamento: document.getElementById('agPagamento').value,
-                status: 'Agendado'
+                cliente: document.getElementById('cliente').value,
+                telefone: document.getElementById('telefone').value,
+                servico: document.getElementById('selectServico').value,
+                data: document.getElementById('data').value,
+                hora: document.getElementById('hora').value,
+                valor: document.getElementById('valor').value,
+                pagamento: document.getElementById('pagamento').value
             };
             agendamentos.push(novoAg);
-            salvarDados();
-            this.reset();
+            localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+            document.getElementById('formAgendamento').reset();
+            renderizarAgendamentos();
         });
 
-        function removerCliente(index) {
-            if(confirm('Deseja realmente excluir esta cliente?')) {
-                clientes.splice(index, 1);
-                salvarDados();
-            }
-        }
-
-        function removerAgendamento(index) {
-            if(confirm('Deseja realmente excluir este agendamento?')) {
+        function excluirAgendamento(index) {
+            if (confirm('Deseja excluir este agendamento?')) {
                 agendamentos.splice(index, 1);
-                salvarDados();
+                localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+                renderizarAgendamentos();
             }
         }
 
-        function alternarStatus(index) {
-            agendamentos[index].status = agendamentos[index].status === 'Agendado' ? 'Concluído' : 'Agendado';
-            salvarDados();
-        }
-
-        atualizarTabelas();
+        renderizarServicos();
+        renderizarAgendamentos();
     </script>
 </body>
 </html>
