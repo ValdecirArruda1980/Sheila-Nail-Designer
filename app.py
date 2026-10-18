@@ -30,6 +30,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <button class="nav-link active" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda" type="button" role="tab"><i class="fa-solid fa-calendar-days"></i> Agendamentos</button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes" type="button" role="tab"><i class="fa-solid fa-users"></i> Gerenciar Clientes</button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="servicos-tab" data-bs-toggle="tab" data-bs-target="#servicos" type="button" role="tab"><i class="fa-solid fa-list-check"></i> Gerenciar Serviços</button>
             </li>
         </ul>
@@ -48,11 +51,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                 <form id="formAgendamento">
                                     <div class="mb-3">
                                         <label for="cliente" class="form-label">Nome da Cliente</label>
-                                        <input type="text" class="form-control" id="cliente" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="telefone" class="form-label">Telefone / WhatsApp</label>
-                                        <input type="text" class="form-control" id="telefone">
+                                        <select class="form-select" id="cliente" required>
+                                            <option value="">Selecione uma cliente...</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="selectServico" class="form-label">Serviço (Predefinido)</label>
@@ -120,17 +121,77 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 </div>
             </div>
 
-            <!-- ABA 2: GERENCIAR SERVIÇOS -->
+            <!-- ABA 2: GERENCIAR CLIENTES -->
+            <div class="tab-pane fade" id="clientes" role="tabpanel">
+                <div class="row">
+                    <!-- Cadastro / Edição de Cliente -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0" id="tituloFormCliente"><i class="fa-solid fa-user-plus"></i> Cadastrar Nova Cliente</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="formCliente">
+                                    <input type="hidden" id="editIndexCliente" value="">
+                                    <div class="mb-3">
+                                        <label for="nomeCliente" class="form-label">Nome da Cliente</label>
+                                        <input type="text" class="form-control" id="nomeCliente" placeholder="Ex: Maria Silva" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="telefoneCliente" class="form-label">Telefone / WhatsApp</label>
+                                        <input type="text" class="form-control" id="telefoneCliente" placeholder="Ex: (19) 99999-9999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="obsCliente" class="form-label">Observações (Alergias / Preferências)</label>
+                                        <textarea class="form-control" id="obsCliente" rows="2" placeholder="Ex: Prefere esmalte em gel vermelho"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-info text-white w-100" id="btnSalvarCliente"><i class="fa-solid fa-plus"></i> Adicionar Cliente</button>
+                                    <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btnCancelarCliente" onclick="cancelarEdicaoCliente()">Cancelar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Clientes -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0"><i class="fa-solid id-card"></i> Clientes Cadastradas</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Telefone</th>
+                                                <th>Observações</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabelaClientes">
+                                            <!-- Preenchido via JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: GERENCIAR SERVIÇOS -->
             <div class="tab-pane fade" id="servicos" role="tabpanel">
                 <div class="row">
-                    <!-- Cadastro de Serviço -->
+                    <!-- Cadastro / Edição de Serviço -->
                     <div class="col-md-4 mb-4">
                         <div class="card shadow-sm">
                             <div class="card-header bg-secondary text-white">
-                                <h5 class="mb-0"><i class="fa-solid fa-scissors"></i> Cadastrar Novo Serviço</h5>
+                                <h5 class="mb-0" id="tituloFormServico"><i class="fa-solid fa-scissors"></i> Cadastrar Novo Serviço</h5>
                             </div>
                             <div class="card-body">
                                 <form id="formServico">
+                                    <input type="hidden" id="editIndexServico" value="">
                                     <div class="mb-3">
                                         <label for="nomeServico" class="form-label">Nome do Serviço</label>
                                         <input type="text" class="form-control" id="nomeServico" placeholder="Ex: Esmaltação em Gel" required>
@@ -143,7 +204,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                                         <label for="tempoServico" class="form-label">Duração Estimada</label>
                                         <input type="text" class="form-control" id="tempoServico" placeholder="Ex: 45 min" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-plus"></i> Adicionar Serviço</button>
+                                    <button type="submit" class="btn btn-primary w-100" id="btnSalvarServico"><i class="fa-solid fa-plus"></i> Adicionar Serviço</button>
+                                    <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btnCancelarServico" onclick="cancelarEdicaoServico()">Cancelar</button>
                                 </form>
                             </div>
                         </div>
@@ -190,11 +252,95 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             { nome: 'Esmaltação em Gel', preco: 60.00, tempo: '1 hora' },
             { nome: 'Alongamento em Fibra', preco: 150.00, tempo: '2 horas' }
         ];
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
 
         if (!localStorage.getItem('servicos')) {
             localStorage.setItem('servicos', JSON.stringify(servicos));
         }
 
+        // --- GERENCIAR CLIENTES ---
+        function renderizarClientes() {
+            const tbody = document.getElementById('tabelaClientes');
+            tbody.innerHTML = '';
+            
+            clientes.forEach((c, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${c.nome}</strong></td>
+                        <td>${c.telefone || 'N/A'}</td>
+                        <td><small class="text-muted">${c.obs || '-'}</small></td>
+                        <td>
+                            <button class="btn btn-warning btn-sm me-1" onclick="editarCliente(${index})" title="Editar">
+                                <i class="fa-solid fa-pen text-white"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirCliente(${index})" title="Excluir">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            atualizarSelectClientes();
+        }
+
+        function atualizarSelectClientes() {
+            const select = document.getElementById('cliente');
+            select.innerHTML = '<option value="">Selecione uma cliente...</option>';
+            clientes.forEach((c) => {
+                select.innerHTML += `<option value="${c.nome}">${c.nome} (${c.telefone || 'Sem tel'})</option>`;
+            });
+        }
+
+        document.getElementById('formCliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const index = document.getElementById('editIndexCliente').value;
+            const novaCliente = {
+                nome: document.getElementById('nomeCliente').value,
+                telefone: document.getElementById('telefoneCliente').value,
+                obs: document.getElementById('obsCliente').value
+            };
+
+            if (index === "") {
+                clientes.push(novaCliente);
+            } else {
+                clientes[index] = novaCliente;
+                cancelarEdicaoCliente();
+            }
+
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            document.getElementById('formCliente').reset();
+            renderizarClientes();
+        });
+
+        function editarCliente(index) {
+            const c = clientes[index];
+            document.getElementById('nomeCliente').value = c.nome;
+            document.getElementById('telefoneCliente').value = c.telefone;
+            document.getElementById('obsCliente').value = c.obs;
+            document.getElementById('editIndexCliente').value = index;
+
+            document.getElementById('tituloFormCliente').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editar Cliente';
+            document.getElementById('btnSalvarCliente').innerHTML = '<i class="fa-solid fa-save"></i> Atualizar Cliente';
+            document.getElementById('btnCancelarCliente').classList.remove('d-none');
+        }
+
+        function cancelarEdicaoCliente() {
+            document.getElementById('formCliente').reset();
+            document.getElementById('editIndexCliente').value = "";
+            document.getElementById('tituloFormCliente').innerHTML = '<i class="fa-solid fa-user-plus"></i> Cadastrar Nova Cliente';
+            document.getElementById('btnSalvarCliente').innerHTML = '<i class="fa-solid fa-plus"></i> Adicionar Cliente';
+            document.getElementById('btnCancelarCliente').classList.add('d-none');
+        }
+
+        function excluirCliente(index) {
+            if (confirm('Deseja realmente excluir esta cliente?')) {
+                clientes.splice(index, 1);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+                renderizarClientes();
+            }
+        }
+
+        // --- GERENCIAR SERVIÇOS ---
         function renderizarServicos() {
             const tbody = document.getElementById('tabelaServicos');
             tbody.innerHTML = '';
@@ -206,7 +352,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <td>R$ ${parseFloat(s.preco).toFixed(2)}</td>
                         <td><span class="badge bg-info text-dark">${s.tempo}</span></td>
                         <td>
-                            <button class="btn btn-danger btn-sm" onclick="excluirServico(${index})">
+                            <button class="btn btn-warning btn-sm me-1" onclick="editarServico(${index})" title="Editar">
+                                <i class="fa-solid fa-pen text-white"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirServico(${index})" title="Excluir">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -235,16 +384,44 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
         document.getElementById('formServico').addEventListener('submit', function(e) {
             e.preventDefault();
+            const index = document.getElementById('editIndexServico').value;
             const novoServico = {
                 nome: document.getElementById('nomeServico').value,
                 preco: parseFloat(document.getElementById('precoServico').value),
                 tempo: document.getElementById('tempoServico').value
             };
-            servicos.push(novoServico);
+
+            if (index === "") {
+                servicos.push(novoServico);
+            } else {
+                servicos[index] = novoServico;
+                cancelarEdicaoServico();
+            }
+
             localStorage.setItem('servicos', JSON.stringify(servicos));
             document.getElementById('formServico').reset();
             renderizarServicos();
         });
+
+        function editarServico(index) {
+            const s = servicos[index];
+            document.getElementById('nomeServico').value = s.nome;
+            document.getElementById('precoServico').value = s.preco;
+            document.getElementById('tempoServico').value = s.tempo;
+            document.getElementById('editIndexServico').value = index;
+
+            document.getElementById('tituloFormServico').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editar Serviço';
+            document.getElementById('btnSalvarServico').innerHTML = '<i class="fa-solid fa-save"></i> Atualizar Serviço';
+            document.getElementById('btnCancelarServico').classList.remove('d-none');
+        }
+
+        function cancelarEdicaoServico() {
+            document.getElementById('formServico').reset();
+            document.getElementById('editIndexServico').value = "";
+            document.getElementById('tituloFormServico').innerHTML = '<i class="fa-solid fa-scissors"></i> Cadastrar Novo Serviço';
+            document.getElementById('btnSalvarServico').innerHTML = '<i class="fa-solid fa-plus"></i> Adicionar Serviço';
+            document.getElementById('btnCancelarServico').classList.add('d-none');
+        }
 
         function excluirServico(index) {
             if (confirm('Deseja realmente excluir este serviço?')) {
@@ -254,6 +431,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }
         }
 
+        // --- GERENCIAR AGENDAMENTOS ---
         function renderizarAgendamentos() {
             const tbody = document.getElementById('tabelaAgendamentos');
             tbody.innerHTML = '';
@@ -267,12 +445,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 tbody.innerHTML += `
                     <tr>
                         <td><strong>${dataFormatada || ''}</strong><br><small class="text-muted">${ag.hora || ''}</small></td>
-                        <td><strong>${ag.cliente || ''}</strong><br><small class="text-muted"><i class="fa-solid fa-phone"></i> ${ag.telefone || 'N/A'}</small></td>
+                        <td><strong>${ag.cliente || ''}</strong></td>
                         <td>${ag.servico || ''}</td>
                         <td>R$ ${parseFloat(ag.valor || 0).toFixed(2)}</td>
                         <td><span class="badge bg-success">${ag.pagamento || ''}</span></td>
                         <td>
-                            <button class="btn btn-danger btn-sm" onclick="excluirAgendamento(${index})">
+                            <button class="btn btn-danger btn-sm" onclick="excluirAgendamento(${index})" title="Excluir">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -286,7 +464,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             e.preventDefault();
             const novoAg = {
                 cliente: document.getElementById('cliente').value,
-                telefone: document.getElementById('telefone').value,
                 servico: document.getElementById('selectServico').value,
                 data: document.getElementById('data').value,
                 hora: document.getElementById('hora').value,
@@ -307,6 +484,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }
         }
 
+        renderizarClientes();
         renderizarServicos();
         renderizarAgendamentos();
     </script>
